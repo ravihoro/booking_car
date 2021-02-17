@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../widgets/custom_card.dart';
+import '../../widgets/custom_card.dart';
 
-class NewBookings extends StatelessWidget {
+class AcceptedBookings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -11,9 +11,6 @@ class NewBookings extends StatelessWidget {
           location: "Ranchi",
           date: DateTime.now(),
           time: DateTime.now(),
-          accept: () {
-            print('Accepted');
-          },
           reject: () {
             print('Rejected');
           },
@@ -23,9 +20,6 @@ class NewBookings extends StatelessWidget {
           location: "Kamdara",
           date: DateTime.now(),
           time: DateTime.now(),
-          accept: () {
-            print('Accepted');
-          },
           reject: () {
             print('Rejected');
           },
@@ -35,9 +29,6 @@ class NewBookings extends StatelessWidget {
           location: "Lohardaga",
           date: DateTime.now(),
           time: DateTime.now(),
-          accept: () {
-            print('Accepted');
-          },
           reject: () {
             print('Rejected');
           },
@@ -47,9 +38,6 @@ class NewBookings extends StatelessWidget {
           location: "Itki",
           date: DateTime.now(),
           time: DateTime.now(),
-          accept: () {
-            print('Accepted');
-          },
           reject: () {
             print('Rejected');
           },

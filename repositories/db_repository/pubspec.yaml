@@ -1,0 +1,9 @@
+name: db_repository
+description: Dart package which manages mongodb queries
+version: 1.0.0
+
+environment:
+  sdk: ">=2.7.0 < 3.0.0"
+
+dependencies:
+  http:

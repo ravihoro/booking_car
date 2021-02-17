@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:booking_car/model/user_type.dart';
 import 'package:formz/formz.dart';
 import '../../model/model.dart';
 import 'package:authentication_repository/authentication_repository.dart';
@@ -18,6 +19,20 @@ class SignUpCubit extends Cubit<SignUpState> {
       name: name,
       status: Formz.validate([
         name,
+        state.userType,
+        state.email,
+        state.password,
+        state.confirmedPassword,
+      ]),
+    ));
+  }
+
+  void userTypeChanged(String value) {
+    final userType = UserType.dirty(value);
+    emit(state.copyWith(
+      userType: userType,
+      status: Formz.validate([
+        state.name,
         state.email,
         state.password,
         state.confirmedPassword,
@@ -31,6 +46,7 @@ class SignUpCubit extends Cubit<SignUpState> {
       email: email,
       status: Formz.validate([
         state.name,
+        state.userType,
         email,
         state.password,
         state.confirmedPassword,
@@ -44,6 +60,7 @@ class SignUpCubit extends Cubit<SignUpState> {
       password: password,
       status: Formz.validate([
         state.name,
+        state.userType,
         state.email,
         password,
         state.confirmedPassword,
@@ -58,6 +75,7 @@ class SignUpCubit extends Cubit<SignUpState> {
       confirmedPassword: confirmedPassword,
       status: Formz.validate([
         state.name,
+        state.userType,
         state.email,
         state.password,
         confirmedPassword,

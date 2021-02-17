@@ -30,8 +30,11 @@ dependencies:
   cupertino_icons: ^1.0.0
   flutter_bloc:
   formz:
+  dropdown_formfield:
   authentication_repository:
       path: repositories/authentication_repository
+  db_repository:
+      path: repositories/db_repository
 
 dev_dependencies:
   flutter_test:

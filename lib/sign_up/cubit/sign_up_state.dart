@@ -2,6 +2,7 @@ part of 'sign_up_cubit.dart';
 
 class SignUpState {
   final Name name;
+  final UserType userType;
   final Email email;
   final Password password;
   final ConfirmedPassword confirmedPassword;
@@ -10,6 +11,7 @@ class SignUpState {
 
   const SignUpState({
     this.name = const Name.pure(),
+    this.userType = const UserType.pure(),
     this.email = const Email.pure(),
     this.password = const Password.pure(),
     this.confirmedPassword = const ConfirmedPassword.pure(),
@@ -19,6 +21,7 @@ class SignUpState {
 
   SignUpState copyWith({
     Name name,
+    UserType userType,
     Email email,
     Password password,
     ConfirmedPassword confirmedPassword,
@@ -27,6 +30,7 @@ class SignUpState {
   }) {
     return SignUpState(
       name: name ?? this.name,
+      userType: userType ?? this.userType,
       email: email ?? this.email,
       password: password ?? this.password,
       confirmedPassword: confirmedPassword ?? this.confirmedPassword,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../widgets/custom_card.dart';
+import '../../widgets/custom_card.dart';
 
-class RejectedBookings extends StatelessWidget {
+class NewBookings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -14,6 +14,9 @@ class RejectedBookings extends StatelessWidget {
           accept: () {
             print('Accepted');
           },
+          reject: () {
+            print('Rejected');
+          },
         ),
         CustomCard(
           name: "John",
@@ -22,6 +25,9 @@ class RejectedBookings extends StatelessWidget {
           time: DateTime.now(),
           accept: () {
             print('Accepted');
+          },
+          reject: () {
+            print('Rejected');
           },
         ),
         CustomCard(
@@ -32,6 +38,9 @@ class RejectedBookings extends StatelessWidget {
           accept: () {
             print('Accepted');
           },
+          reject: () {
+            print('Rejected');
+          },
         ),
         CustomCard(
           name: "Horo",
@@ -40,6 +49,9 @@ class RejectedBookings extends StatelessWidget {
           time: DateTime.now(),
           accept: () {
             print('Accepted');
+          },
+          reject: () {
+            print('Rejected');
           },
         ),
       ],

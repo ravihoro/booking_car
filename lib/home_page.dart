@@ -1,3 +1,4 @@
+import 'package:booking_car/pages/customer/customer.dart';
 import 'package:booking_car/pages/pages.dart';
 import 'package:flutter/material.dart';
 import './authentication/bloc/authentication_bloc.dart';
@@ -27,7 +28,14 @@ class HomePage extends StatelessWidget {
                   },
                 );
               },
-            )
+            ),
+            ListTile(
+              title: Text('Customer'),
+              onTap: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) => Customer()));
+              },
+            ),
           ],
         ),
       ),

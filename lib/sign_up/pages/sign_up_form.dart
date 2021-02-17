@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../cubit/sign_up_cubit.dart';
 import 'package:formz/formz.dart';
+import 'package:dropdown_formfield/dropdown_formfield.dart';
 
 class SignUpForm extends StatelessWidget {
   @override
@@ -33,6 +34,10 @@ class SignUpForm extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           _NameInput(),
+          const SizedBox(
+            height: 8.0,
+          ),
+          _UserTypeInput(),
           const SizedBox(
             height: 8.0,
           ),
@@ -72,6 +77,36 @@ class _NameInput extends StatelessWidget {
             labelText: 'Name',
             errorText: state.name.invalid ? 'Invalid name' : null,
           ),
+        );
+      },
+    );
+  }
+}
+
+class _UserTypeInput extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<SignUpCubit, SignUpState>(
+      buildWhen: (previous, current) => previous.userType != current.userType,
+      builder: (context, state) {
+        return DropDownFormField(
+          titleText: 'User Type',
+          value: state.userType.value,
+          onChanged: (value) {
+            context.read<SignUpCubit>().userTypeChanged(value);
+          },
+          dataSource: [
+            {
+              "display": "Customer",
+              "value": "customer",
+            },
+            {
+              "display": "Driver",
+              "value": "driver",
+            },
+          ],
+          textField: 'display',
+          valueField: 'value',
         );
       },
     );
