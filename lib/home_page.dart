@@ -1,3 +1,4 @@
+import 'package:booking_car/pages/pages.dart';
 import 'package:flutter/material.dart';
 import './authentication/bloc/authentication_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,7 +31,36 @@ class HomePage extends StatelessWidget {
           ],
         ),
       ),
-      body: Column(),
+      body: DefaultTabController(
+        length: 3,
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text('Driver'),
+            bottom: TabBar(
+              indicatorColor: Colors.amber,
+              //unselectedLabelColor: Colors.amber,
+              tabs: [
+                Tab(
+                  child: Text('New Bookings'),
+                ),
+                Tab(
+                  child: Text('Accepted'),
+                ),
+                Tab(
+                  child: Text('Rejected'),
+                ),
+              ],
+            ),
+          ),
+          body: TabBarView(
+            children: [
+              NewBookings(),
+              AcceptedBookings(),
+              RejectedBookings(),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
