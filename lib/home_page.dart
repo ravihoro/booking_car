@@ -10,20 +10,27 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
-          builder: (context, state) {
-            return FlatButton(
-              child: Text('Logout'),
-              onPressed: () {
-                context
-                    .read<AuthenticationBloc>()
-                    .add(AuthenticationLogoutRequested());
+      drawer: Drawer(
+        child: Column(
+          children: [
+            DrawerHeader(child: null),
+            BlocBuilder<AuthenticationBloc, AuthenticationState>(
+              builder: (context, state) {
+                return ListTile(
+                  trailing: Icon(Icons.exit_to_app),
+                  title: Text('Logout'),
+                  onTap: () {
+                    context
+                        .read<AuthenticationBloc>()
+                        .add(AuthenticationLogoutRequested());
+                  },
+                );
               },
-            );
-          },
+            )
+          ],
         ),
       ),
+      body: Column(),
     );
   }
 }
