@@ -3,6 +3,8 @@ import 'package:booking_car/pages/pages.dart';
 import 'package:flutter/material.dart';
 import './authentication/bloc/authentication_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
+import './pages/driver/car_details.dart';
 
 class HomePage extends StatelessWidget {
   static Route route() {
@@ -44,6 +46,20 @@ class HomePage extends StatelessWidget {
         child: Scaffold(
           appBar: AppBar(
             title: Text('Driver'),
+            actions: [
+              BlocBuilder<AuthenticationBloc, AuthenticationState>(
+                builder: (context, state) {
+                  return IconButton(
+                    icon: Icon(Icons.car_rental),
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) =>
+                              CarDetails(email: state.user.email)));
+                    },
+                  );
+                },
+              ),
+            ],
             bottom: TabBar(
               indicatorColor: Colors.amber,
               //unselectedLabelColor: Colors.amber,

@@ -89,6 +89,7 @@ class SignUpCubit extends Cubit<SignUpState> {
     try {
       bool val = await authenticationRepository.signUp(
           name: state.name.value,
+          userType: state.userType.value,
           email: state.email.value,
           password: state.password.value);
       print(val);

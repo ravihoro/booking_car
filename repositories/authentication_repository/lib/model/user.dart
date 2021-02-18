@@ -2,13 +2,17 @@ import 'package:meta/meta.dart';
 
 class User {
   final String name;
+  final String userType;
   final String email;
   final String password;
 
   const User(
-      {@required this.name, @required this.email, @required this.password});
+      {@required this.name,
+      @required this.userType,
+      @required this.email,
+      @required this.password});
 
-  static const empty = User(name: '', email: '', password: '');
+  static const empty = User(name: '', userType: '', email: '', password: '');
 }
 
 class UserModel {
@@ -36,6 +40,7 @@ class UserModel {
   static User fromJson(Map<String, dynamic> json) {
     return User(
       name: json['name'],
+      userType: json['user_type'],
       email: json['email'],
       password: json['password'],
     );

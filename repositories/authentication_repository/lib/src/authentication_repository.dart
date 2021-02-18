@@ -17,21 +17,6 @@ class AuthenticationRepository {
     yield* _userController.stream;
   }
 
-  // Future<bool> login(
-  //     {@required String email, @required String password}) async {
-  //   bool userPresent = false;
-  //   await Future<void>.delayed(const Duration(milliseconds: 300), () {
-  //     User user = UserModel.getUser(email);
-  //     if (user == User.empty)
-  //       userPresent = false;
-  //     else {
-  //       _userController.add(UserModel.getUser(email));
-  //       userPresent = true;
-  //     }
-  //   });
-  //   return userPresent;
-  // }
-
   Future<bool> login(
       {@required String email, @required String password}) async {
     var response;
@@ -57,6 +42,7 @@ class AuthenticationRepository {
       var data = jsonDecode(response.body);
       _userController.add(User(
           name: data['name'],
+          userType: data['user_type'],
           email: data['email'],
           password: data['password']));
       return true;
@@ -69,18 +55,15 @@ class AuthenticationRepository {
 
   Future<bool> signUp({
     @required String name,
+    @required String userType,
     @required String email,
     @required String password,
   }) async {
-    // print(name);
-    // print(email);
-    // print(password);
-    var response; //; = await http.post(url + "/users");
+    var response;
     try {
-      //response = await http.get(url + "/users");
-
       Map data = {
         'name': name,
+        'user_type': userType,
         'email': email,
         'password': password,
       };
@@ -103,18 +86,6 @@ class AuthenticationRepository {
       return true;
     }
   }
-
-  // bool signUp({
-  //   @required String name,
-  //   @required String email,
-  //   @required String password,
-  // }) {
-  //   if (!UserModel.checkUserExists(email)) {
-  //     UserModel.addUser(name, email, password);
-  //     return true;
-  //   }
-  //   return false;
-  // }
 
   void dispose() {
     _userController.close();
