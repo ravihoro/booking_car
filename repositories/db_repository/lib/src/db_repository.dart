@@ -17,6 +17,17 @@ class DbRepository {
     }
   }
 
+  Future getImage(String filename) async {
+    final path = "$url/getImage/$filename";
+    var response = await http.get(path);
+    if (response.statusCode == 200) {
+      return response;
+    } else {
+      print("Error fetching image");
+      return null;
+    }
+  }
+
   Future getCarDetails({String email}) async {
     var response = await http.get(url + '/car_details/$email');
     if (response.statusCode == 200) {

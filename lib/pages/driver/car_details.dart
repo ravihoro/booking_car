@@ -2,6 +2,8 @@ import 'package:booking_car/pages/driver/add_car_details.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:db_repository/db_repository.dart';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 
 class CarDetails extends StatefulWidget {
   final String email;
@@ -13,23 +15,42 @@ class CarDetails extends StatefulWidget {
 }
 
 class _CarDetailsState extends State<CarDetails> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  var _nameController = TextEditingController();
-  var _regNoController = TextEditingController();
   var dbRepository;
   var carData;
 
-  // Future getCarDetails(String email) async {
-  //   print("Car details function");
-  //   var carData = await dbRepository.getCarDetails(name: email.trim());
-  //   return carData;
-  // }
+  TextStyle style = TextStyle(
+    fontSize: 20,
+    fontWeight: FontWeight.w400,
+  );
 
   @override
   void initState() {
     super.initState();
     dbRepository = Provider.of<DbRepository>(context, listen: false);
     carData = dbRepository.getCarDetails(email: widget.email.trim());
+  }
+
+  Future<List<File>> getImages(List<dynamic> imageFileNames) async {
+    List<File> imageFiles = List<File>();
+    if (carData == null) return null;
+    for (int i = 0; i < imageFileNames.length; i++) {
+      File tempFile = await getImageFile(imageFileNames[i].toString());
+      imageFiles.add(tempFile);
+    }
+    return imageFiles;
+  }
+
+  Future<File> getImageFile(String filename) async {
+    var response = await dbRepository.getImage(filename);
+    if (response.statusCode == 200) {
+      Directory tempDir = await getTemporaryDirectory();
+      String tempPath = tempDir.path;
+      File file = new File('$tempPath/$filename.jpg');
+      await file.writeAsBytes(response.bodyBytes);
+      return file;
+    } else {
+      return null;
+    }
   }
 
   @override
@@ -75,97 +96,76 @@ class _CarDetailsState extends State<CarDetails> {
                           builder: (context) => AddCarDetails(
                                 email: widget.email,
                               )));
-                      //_showAddCarDetailsDialog(context);
                     },
                   ),
                 ],
               ),
             );
           } else {
-            return Center(
+            print(data['images']);
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Car Name: ${data["name"]}'),
-                  Text('Registration No. : ${data["reg_no"]}'),
+                  Text(
+                    'Car Name: ${data["name"]}',
+                    style: style,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    'Registration No. : ${data["reg_no"]}',
+                    style: style,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "Car Images: ",
+                    style: style,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  FutureBuilder(
+                    future: getImages(data['images']),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return CircularProgressIndicator();
+                      }
+                      if (snapshot.hasError) return Text("Error");
+                      return Expanded(
+                        child: GridView.builder(
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 3,
+                                  mainAxisSpacing: 2,
+                                  crossAxisSpacing: 2),
+                          itemCount: snapshot.data.length,
+                          itemBuilder: (context, index) {
+                            return Container(
+                              height: 300,
+                              width: 300,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: FileImage(snapshot.data[index]),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      );
+                    },
+                  ),
                 ],
               ),
             );
           }
         },
       ),
-    );
-  }
-
-  void _showAddCarDetailsDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (_) {
-        return AlertDialog(
-          title: Text("Car Details"),
-          content: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  controller: _nameController,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Car Model',
-                  ),
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                TextField(
-                  controller: _regNoController,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Registration Number',
-                  ),
-                ),
-              ],
-            ),
-          ),
-          actions: [
-            RaisedButton(
-              child: Text("Add"),
-              onPressed: () async {
-                String name = _nameController.text;
-                String regNo = _regNoController.text;
-                // bool isSaved = false;
-                bool isSaved = await dbRepository.saveCarDetails(
-                    name: name, email: widget.email, regNo: regNo);
-                Navigator.of(context).pop();
-                if (!isSaved) {
-                  Scaffold.of(context).showSnackBar(SnackBar(
-                    content:
-                        Text("Error saving car details. Please try again."),
-                    backgroundColor: Colors.red,
-                  ));
-                } else {
-                  Scaffold.of(context).showSnackBar(SnackBar(
-                    content: Text("Car details saved."),
-                    backgroundColor: Colors.blue,
-                  ));
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => CarDetails(
-                            email: widget.email,
-                          )));
-                }
-              },
-            ),
-            RaisedButton(
-              child: Text("Cancel"),
-              onPressed: () {
-                _nameController.text = "";
-                _regNoController.text = "";
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
     );
   }
 }

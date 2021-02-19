@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:booking_car/pages/driver/car_details.dart';
 import 'package:db_repository/db_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
@@ -38,8 +39,11 @@ class _AddCarDetailsState extends State<AddCarDetails> {
   Widget buildGridView() {
     return GridView.builder(
       itemCount: images.length,
-      gridDelegate:
-          SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        mainAxisSpacing: 2,
+        crossAxisSpacing: 2,
+      ),
       itemBuilder: (context, index) {
         Asset asset = images[index];
         return AssetThumb(
@@ -177,25 +181,23 @@ class _AddCarDetailsState extends State<AddCarDetails> {
               SizedBox(
                 height: 5,
               ),
-              // RaisedButton(
-              //   child: Text('Upload Images'),
-              //   onPressed: () {
-              //     _uploadImages();
-              //   },
-              // ),
             ],
           ),
         ),
       ),
-      bottomNavigationBar: Container(
-        height: 50.0,
-        child: RaisedButton(
-          child: Text("Add", style: TextStyle(color: Colors.white)),
-          color: Colors.blue,
-          onPressed: () {
-            _add(context);
-          },
-        ),
+      bottomNavigationBar: Builder(
+        builder: (context) {
+          return Container(
+            height: 50.0,
+            child: RaisedButton(
+              child: Text("Add", style: TextStyle(color: Colors.white)),
+              color: Colors.blue,
+              onPressed: () {
+                _add(context);
+              },
+            ),
+          );
+        },
       ),
     );
   }
@@ -214,12 +216,23 @@ class _AddCarDetailsState extends State<AddCarDetails> {
         );
         imageFileNames = [];
         if (saved) {
+          Navigator.of(context).pop();
+          Navigator.of(context).pop();
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => CarDetails(email: widget.email)));
           print("Data saved");
         } else {
-          print("Data not saved");
+          Scaffold.of(context).showSnackBar(SnackBar(
+            content: Text("Car details saving unsuccessful"),
+            backgroundColor: Colors.red,
+          ));
         }
       } else {
         print("Upload failed");
+        Scaffold.of(context).showSnackBar(SnackBar(
+          content: Text("Upload failed"),
+          backgroundColor: Colors.red,
+        ));
       }
     }
   }
