@@ -1,6 +1,6 @@
 import 'dart:typed_data';
+import 'package:db_repository/db_repository.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
@@ -9,6 +9,7 @@ import 'package:async/async.dart';
 import 'package:path/path.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'dart:math';
+import 'package:provider/provider.dart';
 
 class AddCarDetails extends StatefulWidget {
   final String email;
@@ -23,24 +24,30 @@ class _AddCarDetailsState extends State<AddCarDetails> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   var _nameController = TextEditingController();
   var _regNoController = TextEditingController();
-  String _error = "No error detected";
+  List<String> imageFileNames = List<String>();
   File _image;
+
+  @override
+  void initState() {
+    super.initState();
+    imageFileNames = List<String>();
+  }
 
   List<Asset> images = List<Asset>();
 
   Widget buildGridView() {
-    return GridView.count(
-      crossAxisSpacing: 2,
-      mainAxisSpacing: 2,
-      children: List.generate(images.length, (index) {
+    return GridView.builder(
+      itemCount: images.length,
+      gridDelegate:
+          SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+      itemBuilder: (context, index) {
         Asset asset = images[index];
         return AssetThumb(
           asset: asset,
           width: 300,
           height: 300,
         );
-      }),
-      crossAxisCount: 3,
+      },
     );
   }
 
@@ -70,27 +77,32 @@ class _AddCarDetailsState extends State<AddCarDetails> {
         buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
   }
 
-  void _upload() {
+  Future<bool> _uploadImages() async {
     var random = Random();
-    images.forEach((image) async {
-      ByteData data = await image.getByteData();
-      _image = await writeToFile(data);
-      print(DateTime.now().toIso8601String());
-      var stream =
-          new http.ByteStream(DelegatingStream.typed(_image.openRead()));
-      var length = await _image.length();
-      var uri = Uri.parse("http://192.168.0.6:3000/upload");
-      var request = new http.MultipartRequest("POST", uri);
-      String filename =
-          widget.email + "${random.nextInt(100)}" + basename(_image.path);
-      var multipartFile =
-          new http.MultipartFile('image', stream, length, filename: filename);
-      request.files.add(multipartFile);
-      var response = await request.send();
-      response.stream.transform(Utf8Decoder()).listen((value) {
-        print(value);
-      });
+    for (int i = 0; i < images.length; i++) {
+      int statusCode = await _upload(images[i], random.nextInt(100));
+      if (statusCode != 200) return false;
+    }
+    return true;
+  }
+
+  Future<int> _upload(Asset image, int random) async {
+    ByteData data = await image.getByteData();
+    _image = await writeToFile(data);
+    var stream = new http.ByteStream(DelegatingStream.typed(_image.openRead()));
+    var length = await _image.length();
+    var uri = Uri.parse("http://192.168.0.6:3000/upload");
+    var request = new http.MultipartRequest("POST", uri);
+    String filename = widget.email + "$random" + basename(_image.path);
+    imageFileNames.add(filename);
+    var multipartFile =
+        new http.MultipartFile('image', stream, length, filename: filename);
+    request.files.add(multipartFile);
+    var response = await request.send();
+    response.stream.transform(Utf8Decoder()).listen((value) {
+      print(value);
     });
+    return response.statusCode;
   }
 
   @override
@@ -165,12 +177,12 @@ class _AddCarDetailsState extends State<AddCarDetails> {
               SizedBox(
                 height: 5,
               ),
-              RaisedButton(
-                child: Text('Upload'),
-                onPressed: () {
-                  _upload();
-                },
-              ),
+              // RaisedButton(
+              //   child: Text('Upload Images'),
+              //   onPressed: () {
+              //     _uploadImages();
+              //   },
+              // ),
             ],
           ),
         ),
@@ -181,14 +193,34 @@ class _AddCarDetailsState extends State<AddCarDetails> {
           child: Text("Add", style: TextStyle(color: Colors.white)),
           color: Colors.blue,
           onPressed: () {
-            _add();
+            _add(context);
           },
         ),
       ),
     );
   }
 
-  void _add() async {
-    await _upload();
+  void _add(BuildContext context) async {
+    if (_formKey.currentState.validate()) {
+      bool val = await _uploadImages();
+      print("Value of val is: $val. Starting to save now");
+      if (val) {
+        var dbRepository = Provider.of<DbRepository>(context, listen: false);
+        bool saved = await dbRepository.saveCarDetails(
+          name: _nameController.text,
+          email: widget.email,
+          regNo: _regNoController.text,
+          imageFileNames: imageFileNames,
+        );
+        imageFileNames = [];
+        if (saved) {
+          print("Data saved");
+        } else {
+          print("Data not saved");
+        }
+      } else {
+        print("Upload failed");
+      }
+    }
   }
 }

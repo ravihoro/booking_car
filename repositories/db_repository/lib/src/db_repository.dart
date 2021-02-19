@@ -31,15 +31,17 @@ class DbRepository {
     @required String name,
     @required String email,
     @required String regNo,
+    @required List<String> imageFileNames,
   }) async {
     var response;
     try {
-      Map data = {
+      Map<String, dynamic> data = {
         'name': name,
         'email': email,
         'reg_no': regNo,
+        'images': imageFileNames,
       };
-
+      print(data['images']);
       String body = jsonEncode(data);
 
       response = await http.post(
@@ -50,7 +52,6 @@ class DbRepository {
     } catch (e) {
       print(e.toString());
     }
-
     if (response.statusCode == 409 || response.statusCode == 500) {
       return false;
     } else {
