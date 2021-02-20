@@ -217,8 +217,8 @@ class _AddCarDetailsState extends State<AddCarDetails> {
         imageFileNames = [];
         if (saved) {
           Navigator.of(context).pop();
-          Navigator.of(context).pop();
-          Navigator.of(context).push(MaterialPageRoute(
+          //Navigator.of(context).pop();
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (context) => CarDetails(email: widget.email)));
           print("Data saved");
         } else {

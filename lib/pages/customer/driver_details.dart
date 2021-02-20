@@ -1,3 +1,4 @@
+import 'package:booking_car/pages/customer/make_booking.dart';
 import 'package:flutter/material.dart';
 import 'package:db_repository/db_repository.dart';
 
@@ -48,43 +49,17 @@ class DriverDetails extends StatelessWidget {
             ),
           ),
           onPressed: () {
-            _showBookingDialog(context);
+            // var customerEmail =
+            //     context.read<AuthenticationBloc>().state.user.email;
+            var driverEmail = driver.email;
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => MakeBooking(
+                      driverEmail: driverEmail,
+                    )));
           },
         ),
       ),
     );
-  }
-
-  void _showBookingDialog(BuildContext context) {
-    showDialog(
-        context: context,
-        builder: (_) {
-          return AlertDialog(
-            title: Text("New Booking"),
-            content: Form(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextField(
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Origin',
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10.0,
-                  ),
-                  TextField(
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Destination',
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        });
   }
 
   Widget carDetails() {
