@@ -30,11 +30,31 @@ class DbRepository {
     }
   }
 
-  Future getDriverBookings({String email, DateTime date}) async {
-    var response = await http.get(url + "/driver_bookings/$email/$date");
+  Future getDriverBookings({String email, String status, DateTime date}) async {
+    var response;
+    if (date != null) {
+      response =
+          await http.get(url + "/driver_bookings/$email/$status/${date}");
+    } else {
+      response = await http.get(url + "/driver_bookings/$email/$status");
+    }
+
+    print(response);
+    print(response.body);
+    print(response.body.runtimeType);
+    print(jsonDecode(response.body));
+    print(jsonDecode(response.body).runtimeType);
+    print(response.statusCode);
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body) as List;
-      List<Booking> bookings = data.map((e) => Booking.fromJson(e)).toList();
+      print(data);
+      print(data.runtimeType);
+      //List<Booking> bookings = data.map((e) => Booking.fromJson(e)).toList();
+      List<Booking> bookings = List<Booking>();
+      for (int i = 0; i < data.length; i++) {
+        Booking booking = Booking.fromJson(data[i]);
+        bookings.add(booking);
+      }
       return bookings;
     } else {
       return null;
@@ -71,10 +91,8 @@ class DbRepository {
     @required DateTime date,
   }) async {
     var response;
-    // print("Date in dart is");
-    // print(date.toIso8601String() + "z");
     try {
-      Map<dynamic, dynamic> data = {
+      Map<String, dynamic> data = {
         'email': email,
         'customer_name': customerName,
         'customer_email': customerEmail,

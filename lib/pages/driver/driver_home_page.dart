@@ -1,13 +1,53 @@
 import 'package:booking_car/pages/pages.dart';
+import 'package:db_repository/db_repository.dart';
 import 'package:flutter/material.dart';
 import '../../authentication/bloc/authentication_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
 import './car_details.dart';
 
-class DriverHomePage extends StatelessWidget {
+class DriverHomePage extends StatefulWidget {
   static Route route() {
     return MaterialPageRoute<void>(builder: (_) => DriverHomePage());
+  }
+
+  @override
+  _DriverHomePageState createState() => _DriverHomePageState();
+}
+
+class _DriverHomePageState extends State<DriverHomePage> {
+  DbRepository dbRepository;
+  String email;
+
+  Future<List<Booking>> newBookings;
+  Future<List<Booking>> acceptedBookings;
+  Future<List<Booking>> rejectedBookings;
+
+  @override
+  void initState() {
+    super.initState();
+    dbRepository = context.read<DbRepository>();
+    email = context.read<AuthenticationBloc>().state.user.email;
+    newBookings = getNewBookings();
+    acceptedBookings = getAcceptedBookings();
+    rejectedBookings = getRejectedBookings();
+  }
+
+  Future<List<Booking>> getNewBookings() async {
+    var unknown = await dbRepository.getDriverBookings(
+        email: email, status: "unknown", date: DateTime.now());
+    return unknown;
+  }
+
+  Future<List<Booking>> getAcceptedBookings() async {
+    var accepted =
+        await dbRepository.getDriverBookings(email: email, status: "accepted");
+    return accepted;
+  }
+
+  Future<List<Booking>> getRejectedBookings() async {
+    var rejected =
+        await dbRepository.getDriverBookings(email: email, status: "rejected");
+    return rejected;
   }
 
   @override
@@ -67,12 +107,29 @@ class DriverHomePage extends StatelessWidget {
               ],
             ),
           ),
-          body: TabBarView(
-            children: [
-              NewBookings(),
-              AcceptedBookings(),
-              RejectedBookings(),
-            ],
+          body: FutureBuilder(
+            future:
+                Future.wait([newBookings, acceptedBookings, rejectedBookings]),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              return TabBarView(
+                children: [
+                  NewBookings(
+                    bookings: snapshot.data[0],
+                  ),
+                  AcceptedBookings(
+                    bookings: snapshot.data[1],
+                  ),
+                  RejectedBookings(
+                    bookings: snapshot.data[2],
+                  ),
+                ],
+              );
+            },
           ),
         ),
       ),

@@ -2,21 +2,21 @@ import 'package:flutter/material.dart';
 
 class CustomCard extends StatelessWidget {
   final String name;
-  final String location;
+  final String origin;
+  final String destination;
   final DateTime date;
-  final DateTime time;
   final Function accept;
   final Function reject;
 
   CustomCard(
       {this.name,
-      this.location,
+      this.origin,
+      this.destination,
       this.date,
-      this.time,
       this.accept,
       this.reject});
 
-  TextStyle style = TextStyle(
+  final TextStyle style = TextStyle(
     fontSize: 20.0,
     fontWeight: FontWeight.w400,
   );
@@ -38,7 +38,14 @@ class CustomCard extends StatelessWidget {
               height: 5.0,
             ),
             Text(
-              'Location: $location',
+              'Origin: $origin',
+              style: style,
+            ),
+            SizedBox(
+              height: 5.0,
+            ),
+            Text(
+              'Destination: $destination',
               style: style,
             ),
             SizedBox(
@@ -46,13 +53,6 @@ class CustomCard extends StatelessWidget {
             ),
             Text(
               'Date: $date',
-              style: style,
-            ),
-            SizedBox(
-              height: 5.0,
-            ),
-            Text(
-              'Time: $time',
               style: style,
             ),
             SizedBox(

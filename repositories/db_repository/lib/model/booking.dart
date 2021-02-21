@@ -24,7 +24,7 @@ class Booking {
       origin: map['origin'],
       destination: map['destination'],
       status: map['status'],
-      date: DateTime(map['date']),
+      date: DateTime.parse(map['date']),
     );
   }
 }

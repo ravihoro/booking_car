@@ -77,11 +77,7 @@ class HomePage extends StatelessWidget {
             ),
           ),
           body: TabBarView(
-            children: [
-              NewBookings(),
-              AcceptedBookings(),
-              RejectedBookings(),
-            ],
+            children: [],
           ),
         ),
       ),
