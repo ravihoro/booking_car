@@ -52,7 +52,7 @@ class CustomCard extends StatelessWidget {
               height: 5.0,
             ),
             Text(
-              'Date: $date',
+              'Date: ${date.toString().substring(0, 10)}',
               style: style,
             ),
             SizedBox(
@@ -63,13 +63,16 @@ class CustomCard extends StatelessWidget {
               children: [
                 accept != null
                     ? RaisedButton(
-                        child: Text('Accept'),
+                        color: Colors.blue,
+                        child: Text('Accept',
+                            style: TextStyle(color: Colors.white)),
                         onPressed: accept,
                       )
                     : Container(),
                 reject != null
                     ? RaisedButton(
-                        child: Text('Reject'),
+                        child: Text('Reject',
+                            style: TextStyle(color: Colors.white)),
                         color: Colors.red,
                         onPressed: reject,
                       )

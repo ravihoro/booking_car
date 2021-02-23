@@ -38,17 +38,8 @@ class DbRepository {
     } else {
       response = await http.get(url + "/driver_bookings/$email/$status");
     }
-
-    print(response);
-    print(response.body);
-    print(response.body.runtimeType);
-    print(jsonDecode(response.body));
-    print(jsonDecode(response.body).runtimeType);
-    print(response.statusCode);
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body) as List;
-      print(data);
-      print(data.runtimeType);
       //List<Booking> bookings = data.map((e) => Booking.fromJson(e)).toList();
       List<Booking> bookings = List<Booking>();
       for (int i = 0; i < data.length; i++) {
@@ -79,6 +70,32 @@ class DbRepository {
       return data;
     } else {
       return {};
+    }
+  }
+
+  Future<bool> updateBookingStatus({
+    @required String email,
+    @required String customerEmail,
+    @required DateTime date,
+    @required String status,
+  }) async {
+    var response;
+    Map<String, dynamic> data = {
+      'email': email,
+      'customer_email': customerEmail,
+      'date': date.toIso8601String(),
+      'status': status,
+    };
+    String body = jsonEncode(data);
+    response = await http.put(
+      url + "/update_booking_status",
+      headers: {"Content-Type": "application/json"},
+      body: body,
+    );
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
     }
   }
 

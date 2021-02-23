@@ -1,7 +1,7 @@
 class Booking {
   final String email;
   final String customerName;
-  final String customreEmail;
+  final String customerEmail;
   final String origin;
   final String destination;
   final String status;
@@ -9,7 +9,7 @@ class Booking {
   Booking({
     this.email,
     this.customerName,
-    this.customreEmail,
+    this.customerEmail,
     this.origin,
     this.destination,
     this.status,
@@ -20,7 +20,7 @@ class Booking {
     return Booking(
       email: map['email'],
       customerName: map['customer_name'],
-      customreEmail: map['customer_email'],
+      customerEmail: map['customer_email'],
       origin: map['origin'],
       destination: map['destination'],
       status: map['status'],
