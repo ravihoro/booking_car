@@ -67,6 +67,7 @@ class DriverSearch extends SearchDelegate {
               title: Text(list[index].name),
               subtitle: Text(list[index].email),
               onTap: () {
+                Navigator.of(context).pop();
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => DriverDetails(
                           driver: list[index],

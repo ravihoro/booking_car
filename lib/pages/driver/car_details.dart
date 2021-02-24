@@ -102,7 +102,7 @@ class _CarDetailsState extends State<CarDetails> {
               ),
             );
           } else {
-            print(data['images']);
+            //print(data['images']);
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
