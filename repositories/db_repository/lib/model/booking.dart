@@ -1,5 +1,6 @@
 class Booking {
   final String email;
+  final String name;
   final String customerName;
   final String customerEmail;
   final String origin;
@@ -8,6 +9,7 @@ class Booking {
   final DateTime date;
   Booking({
     this.email,
+    this.name,
     this.customerName,
     this.customerEmail,
     this.origin,
@@ -19,6 +21,7 @@ class Booking {
   static Booking fromJson(Map<String, dynamic> map) {
     return Booking(
       email: map['email'],
+      name: map['name'],
       customerName: map['customer_name'],
       customerEmail: map['customer_email'],
       origin: map['origin'],

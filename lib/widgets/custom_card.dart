@@ -7,14 +7,17 @@ class CustomCard extends StatelessWidget {
   final DateTime date;
   final Function accept;
   final Function reject;
+  final Function cancel;
 
-  CustomCard(
-      {this.name,
-      this.origin,
-      this.destination,
-      this.date,
-      this.accept,
-      this.reject});
+  CustomCard({
+    this.name,
+    this.origin,
+    this.destination,
+    this.date,
+    this.accept,
+    this.reject,
+    this.cancel,
+  });
 
   final TextStyle style = TextStyle(
     fontSize: 20.0,
@@ -79,6 +82,14 @@ class CustomCard extends StatelessWidget {
                     : Container(),
               ],
             ),
+            cancel == null
+                ? Container()
+                : RaisedButton(
+                    child:
+                        Text('Cancel', style: TextStyle(color: Colors.white)),
+                    color: Colors.red,
+                    onPressed: cancel,
+                  ),
           ],
         ),
       ),

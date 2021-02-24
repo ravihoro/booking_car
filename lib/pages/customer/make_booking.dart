@@ -1,13 +1,15 @@
 import 'package:booking_car/pages/customer/calendar.dart';
+//import 'package:booking_car/pages/customer/customer_home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:db_repository/db_repository.dart';
 import 'package:provider/provider.dart';
 import '../../authentication/bloc/authentication_bloc.dart';
 
 class MakeBooking extends StatefulWidget {
-  final driverEmail;
+  final String driverEmail;
+  final String driverName;
 
-  MakeBooking({this.driverEmail});
+  MakeBooking({this.driverName, this.driverEmail});
 
   @override
   _MakeBookingState createState() => _MakeBookingState();
@@ -176,8 +178,9 @@ class _MakeBookingState extends State<MakeBooking> {
   void makeBooking(BuildContext context) async {
     bool val = await dbRepository.makeBooking(
       email: widget.driverEmail,
+      name: widget.driverName,
       customerName: customerName,
-      customerEmail: customerName,
+      customerEmail: customerEmail,
       origin: _originController.text,
       destination: _destinationController.text,
       date: DateTime.parse(_dateController.text),

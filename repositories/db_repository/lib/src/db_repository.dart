@@ -30,14 +30,30 @@ class DbRepository {
     }
   }
 
-  Future getDriverBookings({String email, String status, DateTime date}) async {
+  Future getBookings(
+      {String email,
+      String status,
+      DateTime date,
+      String customerEmail}) async {
     var response;
-    if (date != null) {
-      response =
-          await http.get(url + "/driver_bookings/$email/$status/${date}");
-    } else {
-      response = await http.get(url + "/driver_bookings/$email/$status");
+    if (email != null) {
+      if (date != null) {
+        response =
+            await http.get(url + "/driver_bookings/$email/$status/${date}");
+      } else {
+        response = await http.get(url + "/driver_bookings/$email/$status");
+      }
     }
+    if (customerEmail != null) {
+      if (date != null) {
+        response = await http
+            .get(url + "/customer_bookings/$customerEmail/$status/${date}");
+      } else {
+        response =
+            await http.get(url + "/customer_bookings/$customerEmail/$status");
+      }
+    }
+
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body) as List;
       //List<Booking> bookings = data.map((e) => Booking.fromJson(e)).toList();
@@ -99,8 +115,27 @@ class DbRepository {
     }
   }
 
+  Future<bool> deleteBooking({
+    @required String email,
+    @required String customerEmail,
+    @required DateTime date,
+    @required String status,
+  }) async {
+    var response;
+    response = await http.delete(
+      url + "/delete_booking/$email/$customerEmail/$date/$status",
+      headers: {"Content-Type": "application/json"},
+    );
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   Future<bool> makeBooking({
     @required String email,
+    @required String name,
     @required String customerName,
     @required String customerEmail,
     @required String origin,
@@ -111,6 +146,7 @@ class DbRepository {
     try {
       Map<String, dynamic> data = {
         'email': email,
+        'name': name,
         'customer_name': customerName,
         'customer_email': customerEmail,
         'origin': origin,

@@ -114,6 +114,7 @@ class _DriverDetailsState extends State<DriverDetails> {
             var driverEmail = widget.driver.email;
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => MakeBooking(
+                      driverName: widget.driver.name,
                       driverEmail: driverEmail,
                     )));
           },
