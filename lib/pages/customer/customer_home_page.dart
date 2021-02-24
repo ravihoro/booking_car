@@ -53,77 +53,91 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 3,
-      child: Scaffold(
-        drawer: Drawer(
-          child: Column(
-            children: [
-              DrawerHeader(child: null),
-              BlocBuilder<AuthenticationBloc, AuthenticationState>(
-                builder: (context, state) {
-                  return ListTile(
-                    trailing: Icon(Icons.exit_to_app),
-                    title: Text('Logout'),
-                    onTap: () {
-                      context
-                          .read<AuthenticationBloc>()
-                          .add(AuthenticationLogoutRequested());
-                    },
-                  );
+    return RefreshIndicator(
+      onRefresh: () {
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => CustomerHomePage()));
+        return Future.value(false);
+      },
+      child: DefaultTabController(
+        length: 3,
+        child: Scaffold(
+          drawer: Drawer(
+            child: Column(
+              children: [
+                DrawerHeader(child: null),
+                BlocBuilder<AuthenticationBloc, AuthenticationState>(
+                  builder: (context, state) {
+                    return ListTile(
+                      trailing: Icon(Icons.exit_to_app),
+                      title: Text('Logout'),
+                      onTap: () {
+                        context
+                            .read<AuthenticationBloc>()
+                            .add(AuthenticationLogoutRequested());
+                      },
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+          appBar: AppBar(
+            title: Text('Customer'),
+            actions: [
+              IconButton(
+                icon: Icon(Icons.search),
+                onPressed: () {
+                  showSearch(context: context, delegate: DriverSearch());
                 },
               ),
             ],
-          ),
-        ),
-        appBar: AppBar(
-          title: Text('Customer'),
-          actions: [
-            IconButton(
-              icon: Icon(Icons.search),
-              onPressed: () {
-                showSearch(context: context, delegate: DriverSearch());
-              },
-            ),
-          ],
-          bottom: TabBar(
-            indicatorColor: Colors.amber,
-            tabs: [
-              Tab(
-                child: Text('New Bookings'),
-              ),
-              Tab(
-                child: Text('Accepted'),
-              ),
-              Tab(
-                child: Text('Rejected'),
-              ),
-            ],
-          ),
-        ),
-        body: FutureBuilder(
-          future:
-              Future.wait([newBookings, acceptedBookings, rejectedBookings]),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            return TabBarView(
-              children: [
-                NewBookings(
-                  bookings: snapshot.data[0],
+            bottom: TabBar(
+              indicatorColor: Colors.amber,
+              tabs: [
+                Tab(
+                  child: Text('New Bookings'),
                 ),
-                AcceptedBookings(
-                  bookings: snapshot.data[1],
+                Tab(
+                  child: Text('Accepted'),
                 ),
-                RejectedBookings(
-                  bookings: snapshot.data[2],
+                Tab(
+                  child: Text('Rejected'),
                 ),
               ],
-            );
-          },
+            ),
+          ),
+          floatingActionButton: FloatingActionButton(
+            child: Icon(Icons.replay),
+            onPressed: () {
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => CustomerHomePage()));
+            },
+          ),
+          body: FutureBuilder(
+            future:
+                Future.wait([newBookings, acceptedBookings, rejectedBookings]),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              return TabBarView(
+                children: [
+                  NewBookings(
+                    bookings: snapshot.data[0],
+                  ),
+                  AcceptedBookings(
+                    bookings: snapshot.data[1],
+                  ),
+                  RejectedBookings(
+                    bookings: snapshot.data[2],
+                  ),
+                ],
+              );
+            },
+          ),
         ),
       ),
     );

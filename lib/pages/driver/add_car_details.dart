@@ -117,71 +117,73 @@ class _AddCarDetailsState extends State<AddCarDetails> {
           'Add Car Details',
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextFormField(
-                controller: _nameController,
-                validator: (value) {
-                  if (value == "") {
-                    return "Please enter car name";
-                  }
-                  return null;
-                },
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Car Name',
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextFormField(
+                  controller: _nameController,
+                  validator: (value) {
+                    if (value == "") {
+                      return "Please enter car name";
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Car Name',
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              TextFormField(
-                controller: _regNoController,
-                validator: (value) {
-                  if (value == "") {
-                    return "Please enter registration number";
-                  }
-                  return null;
-                },
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Registration Number',
+                SizedBox(
+                  height: 10,
                 ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Text(
-                "Add Car Images:",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
+                TextFormField(
+                  controller: _regNoController,
+                  validator: (value) {
+                    if (value == "") {
+                      return "Please enter registration number";
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Registration Number',
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              IconButton(
-                icon: Icon(Icons.add, size: 30),
-                onPressed: () {
-                  loadImages();
-                },
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              Expanded(
-                child: buildGridView(),
-              ),
-              SizedBox(
-                height: 5,
-              ),
-            ],
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  "Add Car Images:",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                IconButton(
+                  icon: Icon(Icons.add, size: 30),
+                  onPressed: () {
+                    loadImages();
+                  },
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Expanded(
+                  child: buildGridView(),
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+              ],
+            ),
           ),
         ),
       ),

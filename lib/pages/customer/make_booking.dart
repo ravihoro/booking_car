@@ -63,93 +63,97 @@ class _MakeBookingState extends State<MakeBooking> {
       appBar: AppBar(
         title: Text("New Booking"),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Form(
-          key: globalKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextFormField(
-                controller: _originController,
-                validator: (value) {
-                  if (value == "") {
-                    return "Origin cannot be empty";
-                  }
-                  return null;
-                },
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Origin',
-                ),
-              ),
-              SizedBox(
-                height: 10.0,
-              ),
-              TextFormField(
-                controller: _destinationController,
-                validator: (value) {
-                  if (value == "") {
-                    return "Destination cannot be empty";
-                  }
-                  return null;
-                },
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Destination',
-                ),
-              ),
-              SizedBox(
-                height: 10.0,
-              ),
-              TextFormField(
-                controller: _dateController,
-                validator: (value) {
-                  print(value == "");
-                  if (value == "" || value == null) {
-                    return "Select date from Calendar.";
-                  }
-                  return null;
-                },
-                readOnly: true,
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    //enabled: false,
-                    labelText: "Date"),
-              ),
-              SizedBox(
-                height: 10.0,
-              ),
-              Flexible(
-                child: FutureBuilder(
-                  future: getDriverBookingDates(widget.driverEmail),
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData) {
-                      return Center(child: CircularProgressIndicator());
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Form(
+            key: globalKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextFormField(
+                  controller: _originController,
+                  validator: (value) {
+                    if (value == "") {
+                      return "Origin cannot be empty";
                     }
-                    return Container(
-                      decoration: BoxDecoration(border: Border.all(width: 1.0)),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Calendar(
-                              dates: snapshot.data, timecallback: timeCallback),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                                "Note: Can only select dates which are not already booked and greater than current date.",
-                                style: TextStyle(
-                                  color: Colors.red,
-                                )),
-                          ),
-                        ],
-                      ),
-                    );
+                    return null;
                   },
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Origin',
+                  ),
                 ),
-              ),
-            ],
+                SizedBox(
+                  height: 10.0,
+                ),
+                TextFormField(
+                  controller: _destinationController,
+                  validator: (value) {
+                    if (value == "") {
+                      return "Destination cannot be empty";
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Destination',
+                  ),
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                TextFormField(
+                  controller: _dateController,
+                  validator: (value) {
+                    print(value == "");
+                    if (value == "" || value == null) {
+                      return "Select date from Calendar.";
+                    }
+                    return null;
+                  },
+                  readOnly: true,
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      //enabled: false,
+                      labelText: "Date"),
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                Flexible(
+                  child: FutureBuilder(
+                    future: getDriverBookingDates(widget.driverEmail),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return Center(child: CircularProgressIndicator());
+                      }
+                      return Container(
+                        decoration:
+                            BoxDecoration(border: Border.all(width: 1.0)),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Calendar(
+                                dates: snapshot.data,
+                                timecallback: timeCallback),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                  "Note: Can only select dates which are not already booked and greater than current date.",
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                  )),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
