@@ -55,6 +55,13 @@ class _DriverHomePageState extends State<DriverHomePage> {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.replay_outlined),
+          onPressed: () {
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => DriverHomePage()));
+          },
+        ),
         drawer: Drawer(
           child: Column(
             children: [
