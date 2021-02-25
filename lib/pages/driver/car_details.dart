@@ -1,9 +1,12 @@
+import 'dart:collection';
+
 import 'package:booking_car/pages/driver/add_car_details.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:db_repository/db_repository.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class CarDetails extends StatefulWidget {
   final String email;
@@ -18,10 +21,75 @@ class _CarDetailsState extends State<CarDetails> {
   var dbRepository;
   var carData;
 
+  final PageController pageController =
+      PageController(initialPage: 0, viewportFraction: 0.8);
+
   TextStyle style = TextStyle(
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: FontWeight.w400,
+    color: Colors.grey,
   );
+
+  imageSlider(int index, List<dynamic> imageFiles) {
+    return AnimatedBuilder(
+      animation: pageController,
+      builder: (context, widget) {
+        double value = 1;
+        if (pageController.position.haveDimensions) {
+          value = pageController.page - index;
+          value = (1 - (value.abs() * 0.3)).clamp(0.0, 1.0);
+        }
+        return Center(
+          child: SizedBox(
+            //height: Curves.easeInOut.transform(value) * 500,
+            //width: Curves.easeInOut.transform(value) * 400,
+            child: widget,
+          ),
+        );
+      },
+      child: Card(
+        elevation: 10.0,
+        child: Container(
+          margin: const EdgeInsets.all(5.0),
+          child: Image.file(
+            imageFiles[index],
+            fit: BoxFit.cover,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget customImageSlider(BuildContext context, List<dynamic> imageFiles) {
+    return Column(
+      children: [
+        Expanded(
+          child: PageView.builder(
+            controller: pageController,
+            itemCount: imageFiles.length,
+            itemBuilder: (context, index) {
+              return imageSlider(index, imageFiles);
+            },
+          ),
+        ),
+        SizedBox(
+          height: 10.0,
+        ),
+        Container(
+          child: SmoothPageIndicator(
+            count: imageFiles.length,
+            controller: pageController,
+            effect: WormEffect(
+              activeDotColor: Theme.of(context).accentColor,
+              dotColor: Colors.grey,
+              dotWidth: 10.0,
+              dotHeight: 10.0,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 
   @override
   void initState() {
@@ -103,65 +171,78 @@ class _CarDetailsState extends State<CarDetails> {
             );
           } else {
             //print(data['images']);
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Car Name: ${data["name"]}',
-                    style: style,
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    'Registration No. : ${data["reg_no"]}',
-                    style: style,
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    "Car Images: ",
-                    style: style,
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  FutureBuilder(
-                    future: getImages(data['images']),
-                    builder: (context, snapshot) {
-                      if (!snapshot.hasData) {
-                        return CircularProgressIndicator();
-                      }
-                      if (snapshot.hasError) return Text("Error");
-                      return Expanded(
-                        child: GridView.builder(
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 3,
-                                  mainAxisSpacing: 2,
-                                  crossAxisSpacing: 2),
-                          itemCount: snapshot.data.length,
-                          itemBuilder: (context, index) {
-                            return Container(
-                              height: 300,
-                              width: 300,
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  image: FileImage(snapshot.data[index]),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            );
-                          },
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                FutureBuilder(
+                  future: getImages(data['images']),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return CircularProgressIndicator();
+                    }
+                    if (snapshot.hasError) return Text("Error");
+                    return Container(
+                      padding: const EdgeInsets.only(bottom: 10.0),
+                      color: Colors.grey[300],
+                      height: 400,
+                      width: MediaQuery.of(context).size.width,
+                      child: customImageSlider(context, snapshot.data),
+                    );
+                  },
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Car Details',
+                        style: TextStyle(
+                          fontSize: 23,
+                          fontWeight: FontWeight.w600,
                         ),
-                      );
-                    },
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        '\u2022 Car Name',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        '   ${data["name"]}',
+                        style: style,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        '\u2022 Registration No. ',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        '  ${data["reg_no"]}',
+                        style: style,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             );
           }
         },

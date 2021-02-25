@@ -36,6 +36,7 @@ dependencies:
   http:
   path_provider:
   flutter_calendar_carousel:
+  smooth_page_indicator:
   authentication_repository:
       path: repositories/authentication_repository
   db_repository:
