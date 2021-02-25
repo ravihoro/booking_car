@@ -67,19 +67,109 @@ class _DriverDetailsState extends State<DriverDetails> {
             padding: const EdgeInsets.all(8.0),
             child: Center(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CircleAvatar(
-                    child: Text('NA'),
-                    backgroundColor: Colors.amber,
-                    maxRadius: MediaQuery.of(context).size.width * 0.18,
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        child: Text('NA'),
+                        backgroundColor: Colors.amber,
+                        maxRadius: MediaQuery.of(context).size.width * 0.18,
+                      ),
+                      SizedBox(
+                        width: 10.0,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Name: ${widget.driver.name}',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w300,
+                            ),
+                          ),
+                          Text(
+                            'Email: ${widget.driver.email}',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w300,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 20.0,
                   ),
                   Text(
-                    'Name: ${widget.driver.name}',
+                    'Vehicle Details',
+                    style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                  Text(
-                    'Email: ${widget.driver.email}',
+                  SizedBox(
+                    height: 10.0,
                   ),
-                  Text('Car Details'),
+                  RichText(
+                    text: TextSpan(
+                        text: '\u2022 Vehicle Name: ',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black,
+                        ),
+                        children: [
+                          TextSpan(
+                            text: '${snapshot.data['name']}',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w300,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ]),
+                  ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  RichText(
+                    text: TextSpan(
+                        text: '\u2022 Registration No. : ',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black,
+                        ),
+                        children: [
+                          TextSpan(
+                            text: '${snapshot.data['reg_no']}',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w300,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ]),
+                  ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  RichText(
+                    text: TextSpan(
+                      text: '\u2022 Vehicle Photos : ',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
                   FutureBuilder(
                     future: getImages(snapshot.data['images']),
                     builder: (context, snapshot) {
@@ -110,8 +200,6 @@ class _DriverDetailsState extends State<DriverDetails> {
             ),
           ),
           onPressed: () {
-            // var customerEmail =
-            //     context.read<AuthenticationBloc>().state.user.email;
             var driverEmail = widget.driver.email;
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => MakeBooking(
@@ -132,6 +220,9 @@ class _DriverDetailsState extends State<DriverDetails> {
         return GestureDetector(
           child: Card(
             //elevation: 20.0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
             child: Hero(
               tag: imageFiles[index],
               child: Container(
@@ -139,6 +230,12 @@ class _DriverDetailsState extends State<DriverDetails> {
                 width: MediaQuery.of(context).size.height * 0.2,
                 //color: Colors.red,
                 decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    width: 1.0,
+                    color: Colors.black,
+                    //style: BorderStyle.solid,
+                  ),
                   image: DecorationImage(
                     fit: BoxFit.cover,
                     image: FileImage(

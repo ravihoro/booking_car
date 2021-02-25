@@ -168,7 +168,7 @@ class _MakeBookingState extends State<MakeBooking> {
               onPressed: () {
                 //print(_dateController.text);
                 if (globalKey.currentState.validate()) {
-                  print("Booking started");
+                  //print("Booking started");
                   makeBooking(context);
                 }
               },
@@ -197,7 +197,7 @@ class _MakeBookingState extends State<MakeBooking> {
     } else {
       Scaffold.of(context).showSnackBar(SnackBar(
         content: Text("Booking successful"),
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.green,
       ));
     }
   }

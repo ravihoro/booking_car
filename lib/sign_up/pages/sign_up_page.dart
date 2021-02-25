@@ -14,23 +14,25 @@ class SignUpPage extends StatelessWidget {
         child: BlocProvider<SignUpCubit>(
           create: (_) => SignUpCubit(context.read<AuthenticationRepository>()),
           child: Center(
-            child: Card(
-              color: Colors.grey[00],
-              elevation: 10.0,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      'Sign Up',
-                      style: TextStyle(
-                        fontSize: 40.0,
-                        fontWeight: FontWeight.w300,
+            child: SingleChildScrollView(
+              child: Card(
+                color: Colors.grey[00],
+                elevation: 10.0,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'Sign Up',
+                        style: TextStyle(
+                          fontSize: 40.0,
+                          fontWeight: FontWeight.w300,
+                        ),
                       ),
-                    ),
-                    SignUpForm(),
-                  ],
+                      SignUpForm(),
+                    ],
+                  ),
                 ),
               ),
             ),
