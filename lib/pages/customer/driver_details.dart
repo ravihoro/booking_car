@@ -70,6 +70,7 @@ class _DriverDetailsState extends State<DriverDetails> {
                 children: [
                   CircleAvatar(
                     child: Text('NA'),
+                    backgroundColor: Colors.amber,
                     maxRadius: MediaQuery.of(context).size.width * 0.18,
                   ),
                   Text(
@@ -130,7 +131,7 @@ class _DriverDetailsState extends State<DriverDetails> {
       itemBuilder: (context, index) {
         return GestureDetector(
           child: Card(
-            elevation: 10.0,
+            //elevation: 20.0,
             child: Hero(
               tag: imageFiles[index],
               child: Container(

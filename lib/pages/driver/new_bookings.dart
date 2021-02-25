@@ -9,6 +9,37 @@ class NewBookings extends StatelessWidget {
 
   NewBookings({this.bookings});
 
+  _dialog(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Message"),
+          content: Text(
+            message,
+          ),
+          actions: [
+            FlatButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (context) => DriverHomePage()));
+              },
+              child: Text('Ok'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  _showScaffold(BuildContext context) {
+    Scaffold.of(context).showSnackBar(SnackBar(
+        content: Text(
+      'Action failed.',
+    )));
+  }
+
   @override
   Widget build(BuildContext context) {
     DbRepository dbRepository = context.read<DbRepository>();
@@ -34,34 +65,9 @@ class NewBookings extends StatelessWidget {
                     status: 'accepted',
                   );
                   if (val) {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: Text("Message"),
-                          content: Text(
-                            "Booking accepted",
-                          ),
-                          actions: [
-                            FlatButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                                Navigator.of(context).pushReplacement(
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            DriverHomePage()));
-                              },
-                              child: Text('Ok'),
-                            ),
-                          ],
-                        );
-                      },
-                    );
+                    _dialog(context, 'Booking accepted');
                   } else {
-                    Scaffold.of(context).showSnackBar(SnackBar(
-                        content: Text(
-                      'Action failed.',
-                    )));
+                    _showScaffold(context);
                   }
                 },
                 reject: () async {
@@ -72,34 +78,9 @@ class NewBookings extends StatelessWidget {
                     status: 'rejected',
                   );
                   if (val) {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: Text("Message"),
-                          content: Text(
-                            "Booking rejected",
-                          ),
-                          actions: [
-                            FlatButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                                Navigator.of(context).pushReplacement(
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            DriverHomePage()));
-                              },
-                              child: Text('Ok'),
-                            ),
-                          ],
-                        );
-                      },
-                    );
+                    _dialog(context, 'Booking rejected');
                   } else {
-                    Scaffold.of(context).showSnackBar(SnackBar(
-                        content: Text(
-                      'Action failed.',
-                    )));
+                    _showScaffold(context);
                   }
                 },
               );

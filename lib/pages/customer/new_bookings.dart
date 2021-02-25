@@ -9,6 +9,30 @@ class NewBookings extends StatelessWidget {
 
   NewBookings({this.bookings});
 
+  _dialog(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Message"),
+          content: Text(
+            message,
+          ),
+          actions: [
+            FlatButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (context) => CustomerHomePage()));
+              },
+              child: Text('Ok'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     DbRepository dbRepository = context.read<DbRepository>();
@@ -34,29 +58,7 @@ class NewBookings extends StatelessWidget {
                     status: 'unknown',
                   );
                   if (val) {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: Text("Message"),
-                          content: Text(
-                            "Booking cancelled",
-                          ),
-                          actions: [
-                            FlatButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                                Navigator.of(context).pushReplacement(
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            CustomerHomePage()));
-                              },
-                              child: Text('Ok'),
-                            ),
-                          ],
-                        );
-                      },
-                    );
+                    _dialog(context, 'Booking cancelled');
                   } else {
                     Scaffold.of(context).showSnackBar(SnackBar(
                       content: Text(
