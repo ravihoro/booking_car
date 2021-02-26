@@ -5,8 +5,6 @@ Car booking app built using Flutter framework. Utilizes MongoDB as database.
 Please refer to this link for code to the api: https://github.com/ravihoro/car_booking_api . 
 
 ## Features
-- Login/Logout
-- Sign up
 - Login and sign up using bloc and flutter_bloc package
 - Driver's Features
     - View bookings
