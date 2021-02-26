@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../authentication/bloc/authentication_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
@@ -71,7 +72,12 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
                     return ListTile(
                       trailing: Icon(Icons.exit_to_app),
                       title: Text('Logout'),
-                      onTap: () {
+                      onTap: () async {
+                        // SharedPreferences prefs =
+                        //     await SharedPreferences.getInstance();
+                        // prefs.setString('email', "");
+                        // prefs.setString('password', "");
+                        // prefs.setBool('isLoggedIn', false);
                         context
                             .read<AuthenticationBloc>()
                             .add(AuthenticationLogoutRequested());

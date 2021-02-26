@@ -2,6 +2,7 @@ import 'package:formz/formz.dart';
 import 'package:bloc/bloc.dart';
 import '../../model/model.dart';
 import 'package:authentication_repository/authentication_repository.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'login_state.dart';
 
@@ -42,6 +43,12 @@ class LoginCubit extends Cubit<LoginState> {
       bool val = await authenticationRepository.login(
           email: state.email.value, password: state.password.value);
       //print("Value of val is $val");
+      // if (val) {
+      //   SharedPreferences prefs = await SharedPreferences.getInstance();
+      //   prefs.setString('email', state.email.value);
+      //   prefs.setString('password', state.password.value);
+      //   prefs.setBool('isLoggedIn', true);
+      // }
       if (!val) {
         emit(state.copyWith(
             userPresent: false, status: FormzStatus.submissionSuccess));
