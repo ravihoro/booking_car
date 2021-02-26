@@ -7,6 +7,7 @@ Please refer to this link for code to the api: https://github.com/ravihoro/car_b
 ## Features
 - Login/Logout
 - Sign up
+- Login and sign up using bloc and flutter_bloc package
 - Driver's Features
     - View bookings
     - Accept/reject bookings
@@ -19,10 +20,8 @@ Please refer to this link for code to the api: https://github.com/ravihoro/car_b
     - View driver details
     - Make new booking based on availability
 
-
-## Tools Used
+## Technologies Used
 - Flutter
-- Bloc package
 - NodeJS
 - MongoDB
 
